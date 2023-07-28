@@ -1,0 +1,93 @@
+*{
+    /* border: 2px solid red; */
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(250, 241, 228);
+    margin: 0;
+}
+
+.outer-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: grey;
+    height: 550px;
+    width: 400px;
+    border-radius: 32px;
+}
+
+.display-panel{
+    background-color: rgb(239, 246, 252);
+    height: 100px;
+    width: 350px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 350px;
+    height: 350px;
+}
+
+button{
+    width: 70px;
+    height: 50px;
+    border-radius: 10px;
+    
+}
+
+.top-bar, .bottom-bar{
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-bar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: auto;
+}
+
+.numerals{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    /* height: 100px; */
+    gap: 10px;
+}
+
+.operations{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+footer{
+    display: flex;
+    gap: 7px;
+    font-size: 22px;
+    align-items: center;
+    margin-top: 45px;
+}
+
+.fa-github{
+    color: black;
+    font-size: 24px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.fa-github:hover{
+    transform: rotate(360deg) scale(1.2);
+}
