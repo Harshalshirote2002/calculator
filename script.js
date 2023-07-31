@@ -1,71 +1,6 @@
+// expectedEvents1 = ['numberEvent', 'operatorEvent', 'numberEvent', 'operateEvent'];
+// expectedEvents2 = ['numberEvent', 'operatorEvent', 'numberEvent', 'operatorEvent'];
 const numerals = document.querySelector('.numerals');
-const clear = document.querySelector('.clear');
-let display = document.querySelector('.display');
-let beginMode = 1;
-let beginOperation = 1;
-let operation = '';
-let operand;
-let currentResult = 0;
-
-function clickEvent(e) {
-    if (Array.from(e.target.classList).includes('numeric-keys')) {
-        if ((e.target.textContent != 0) && beginMode == 1) {
-            beginMode = 0;
-            display.textContent = '';
-        }
-        if (display.textContent.length == 9) {
-            alert("Maximum length reached!");
-        }
-        console.log(e.target.textContent);
-        if (!beginMode && display.textContent.length < 9) {
-            if (e.target.textContent == '.' && !Array.from(display.textContent.split('')).includes('.'))
-                if (display.textContent == '') {
-                    display.textContent = '0.';
-                } else {
-                    display.textContent += '.';
-                }
-            if (e.target.textContent != '.') {
-                display.textContent += `${e.target.textContent}`;
-            }
-        }
-    } else if (e.target.classList[0] == 'operation-keys') {
-        beginMode = 1;
-        if (beginOperation == 1) {
-            beginOperation = 0;
-            currentResult = display.textContent;
-            display.textContent = '0';
-            operation = e.target.textContent
-        } else {
-            currentResult = operator(currentResult, display.textContent, operation);
-            display.textContent = currentResult;
-            operation = e.target.textContent
-        }
-    } else if (e.target.classList[0] == 'operate') {
-        currentResult = operator(currentResult, display.textContent, operation);
-        display.textContent = currentResult;
-        operation = '';
-        beginOperation=1;
-    }
-    else if (Array.from(e.target.classList).includes('delete-btn')) {
-        let tempArr = display.textContent.split('');
-        tempArr.splice(tempArr.length - 1, 1);
-        display.textContent = tempArr.join('');
-    }
-}
-
-const operator = function operator(operandA, operandB, operation) {
-    let result;
-    if (operation == '+') {
-        result = `${parseFloat(operandA) + parseFloat(operandB)}`;
-    } else if (operation == '-') {
-        result = `${parseFloat(operandA) - parseFloat(operandB)}`;
-    } else if (operation == 'X') {
-        result = `${parseFloat(operandA) * parseFloat(operandB)}`;
-    } else {
-        result = `${parseFloat(operandA) / parseFloat(operandB)}`;
-    }
-    return Math.round(result * 10000) / 10000;
-}
 
 for (let i = 1; i <= 9; i++) {
     numerals.style.display = 'grid';
@@ -76,13 +11,155 @@ for (let i = 1; i <= 9; i++) {
     key.classList.add('numeric-keys');
     numerals.appendChild(key);
 }
-const keys = Array.from(document.querySelectorAll('button'));
-keys.forEach(key => key.addEventListener('click', clickEvent));
 
-let reset = function () {
+function buttonPress(e){
+    keys.forEach((key) => {
+        if(Array.from(key.classList).includes('pressed-button')){
+            key.classList.remove('pressed-button');
+        }
+    })
+    e.target.classList.add('pressed-button');
+}
+
+function buttonRelease(e){
+    keys.forEach((key) => {
+        if(Array.from(key.classList).includes('pressed-button')){
+            key.classList.remove('pressed-button');
+        }
+    })
+}
+
+//button click highlight handler
+const keys = Array.from(document.querySelectorAll('button'));
+keys.forEach((key) =>{key.addEventListener('mousedown', buttonPress)});
+keys.forEach((key) =>{key.addEventListener('mouseup', buttonRelease)});
+
+//Input Output handler
+
+keys.forEach((key) => key.addEventListener('click', clickEvent));
+
+const display = document.querySelector('.display');
+let result = '0';
+let operand = '';
+let oldOperation = '+';
+let beginMode = 1;
+
+function validityCheck(){
+    if(display.textContent ==''){
+        display.textContent='0';
+    }
+    else if(display.textContent == '0'){
+        beginMode=1;
+    }
+}
+
+function rejectEvent(){
+    alert('That is not what I expect!');
+}
+
+function numberEvent(e){
+    if(!(e.target.textContent=='0') && beginMode==1){
+        beginMode=0;
+    }
+    if(beginMode==0){
+        if(e.target.textContent=='.'){
+            if(!operand){
+                operand='0';
+            }
+            operand.includes('.') || (operand+='.');
+        }else{
+            operand+=e.target.textContent;
+            
+        }
+        display.textContent=operand;
+        validityCheck();
+    }
+}
+
+function operationEvent(e){
+    currentOperation = e.target.textContent;
+    if(oldOperation=='÷' && display.textContent=='0'){
+        console.log('I was here!');
+        alert('Now that\'s mischievous!');
+        clearEvent();
+        return 
+    }
+    result = operator(result, display.textContent, oldOperation);
+    oldOperation = currentOperation;
+    display.textContent=result;
+    operand = '';
+    validityCheck();
+    
+}
+
+function operateEvent(e){
+    if(!oldOperation){
+        rejectEvent();
+        return
+    }
+    result = operator(result, display.textContent, oldOperation);
+    operand = result;
+    result='0';
+    display.textContent = operand;
+    oldOperation = '+';
+    if(operand=='Infinity'){
+        console.log('I was here!');
+        alert('Now that\'s mischievous!');
+        clearEvent();
+        return 
+    }
+    validityCheck();
+    // oldOperation=''
+}
+
+function deleteEvent(e){
+    if(!operand){
+        rejectEvent();
+        return
+    }
+    tempArr = operand.split('');
+    tempArr.splice(tempArr.length-1, 1);
+    operand = tempArr.join('');
+    display.textContent = operand;
+    validityCheck();
+}
+
+function clearEvent(){
+    result = '0';
+    operand = '';
+    oldOperation = '+';
     beginMode = 1;
     display.textContent = '0';
 }
 
-clear.addEventListener('click', reset);
+function clickEvent(e){
+    if(Array.from(e.target.classList).includes('numeric-keys')){
+        console.log(e.target.textContent);
+        numberEvent(e);
+    }else if(Array.from(e.target.classList).includes('operation-keys')){
+        console.log('operationEvent');
+        operationEvent(e);
+    }else if(Array.from(e.target.classList).includes('operate')){
+        console.log('operateEvent');
+        operateEvent(e);
+    }else if(Array.from(e.target.classList).includes('clear')){
+        console.log('clearEvent');
+        clearEvent();
+    }else if(Array.from(e.target.classList).includes('delete-btn')){
+        console.log('deleteEvent');
+        deleteEvent(e);
+    }
+}
 
+const operator = function operator(result, operand, operation) {
+    if (operation == '+') {
+        result = `${parseFloat(result) + parseFloat(operand)}`;
+    } else if (operation == '-') {
+        result = `${parseFloat(result) - parseFloat(operand)}`;
+    } else if (operation == 'X') {
+        result = `${parseFloat(result) * parseFloat(operand)}`;
+    } else {
+        result = `${parseFloat(result) / parseFloat(operand)}`;
+    }
+    return `${Math.round(result * 10000) / 10000}`;
+}
