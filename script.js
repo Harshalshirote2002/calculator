@@ -77,6 +77,28 @@ function numberEvent(e){
     }
 }
 
+function toggleEvent(){
+    if(parseFloat(display.textContent)>0){
+        tempArr = display.textContent.split('');
+        tempArr.unshift('-');
+        display.textContent = tempArr.join('');
+        if(operand){
+            tempArr2 = operand.split('');
+            tempArr2.unshift('-');
+            operand = tempArr2.join('');
+        }
+    }else if(parseFloat(display.textContent)<0){
+        tempArr = display.textContent.split('');
+        tempArr.shift();
+        display.textContent = tempArr.join('');
+        if(operand){
+            tempArr2 = operand.split('');
+            tempArr2.shift();
+            operand = tempArr2.join('');
+        }
+    }
+}
+
 function operationEvent(e){
     currentOperation = e.target.textContent;
     if(oldOperation=='÷' && display.textContent=='0'){
@@ -148,6 +170,8 @@ function clickEvent(e){
     }else if(Array.from(e.target.classList).includes('delete-btn')){
         console.log('deleteEvent');
         deleteEvent(e);
+    }else if(Array.from(e.target.classList).includes('sign-toggle')){
+        toggleEvent();
     }
 }
 
