@@ -49,6 +49,7 @@ function validityCheck(){
         display.textContent='0';
     }
     else if(display.textContent == '0'){
+        operand='';
         beginMode=1;
     }
 }
@@ -79,7 +80,6 @@ function numberEvent(e){
 function operationEvent(e){
     currentOperation = e.target.textContent;
     if(oldOperation=='÷' && display.textContent=='0'){
-        console.log('I was here!');
         alert('Now that\'s mischievous!');
         clearEvent();
         return 
