@@ -124,14 +124,12 @@ function operateEvent(e){
     result='0';
     display.textContent = operand;
     oldOperation = '+';
-    if(operand=='Infinity'){
-        console.log('I was here!');
+    if(operand=='Infinity' || operand=='-Infinity'){
         alert('Now that\'s mischievous!');
         clearEvent();
         return 
     }
     validityCheck();
-    // oldOperation=''
 }
 
 function deleteEvent(e){
@@ -156,19 +154,14 @@ function clearEvent(){
 
 function clickEvent(e){
     if(Array.from(e.target.classList).includes('numeric-keys')){
-        console.log(e.target.textContent);
         numberEvent(e);
     }else if(Array.from(e.target.classList).includes('operation-keys')){
-        console.log('operationEvent');
         operationEvent(e);
     }else if(Array.from(e.target.classList).includes('operate')){
-        console.log('operateEvent');
         operateEvent(e);
     }else if(Array.from(e.target.classList).includes('clear')){
-        console.log('clearEvent');
         clearEvent();
     }else if(Array.from(e.target.classList).includes('delete-btn')){
-        console.log('deleteEvent');
         deleteEvent(e);
     }else if(Array.from(e.target.classList).includes('sign-toggle')){
         toggleEvent();
